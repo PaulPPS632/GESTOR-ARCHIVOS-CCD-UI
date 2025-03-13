@@ -1,0 +1,14 @@
+<dialog #modal class="backdrop:bg-black/70 rounded-2xl" (cancel)="close()">
+  <div class="sticky top-0 flex flex-row items-center justify-between bg-white px-4 pt-4">
+      <h3 class="text-blue-500 font-semibold text-xl">{{ title }}</h3>
+      <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-sm w-4 h-4 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" (click)="close()">
+        <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+        <span class="sr-only">Cerrar modal</span>
+      </button>
+  </div>
+  <div class="px-4 pb-4 w-full bg-white" >
+      <ng-content></ng-content>
+  </div>
+</dialog>

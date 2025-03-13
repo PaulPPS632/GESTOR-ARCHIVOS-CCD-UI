@@ -1,0 +1,15 @@
+.context-menu {
+    position: absolute;
+    z-index: 50;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 5px;
+    width: 150px;
+  }
+  .no-select {
+    user-select: none; /* Evita la selección de texto */
+    -webkit-user-select: none; /* Para navegadores basados en WebKit (Chrome, Safari) */
+    -moz-user-select: none; /* Para Firefox */
+    -ms-user-select: none; /* Para Edge y versiones antiguas de IE */
+  }

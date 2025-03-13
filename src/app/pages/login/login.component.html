@@ -1,0 +1,18 @@
+<article class="flex items-center justify-center min-h-screen min-w-max bg-gradient-to-r from-[#111f42] to-[#39a0fe] ">
+    <div class="flex flex-col rounded-md p-4 gap-2">
+        <div class="h-28 w-fit mx-auto mb-6">
+            <img src="https://pub-9d2abfa175714e64aed33b90722a9fd5.r2.dev/Multimedia/Imagen/Ccd/Logos/ccd-logo-white.svg" alt="logo" class="h-full object-contain"> 
+        </div>
+        <div class="flex flex-col gap-2">
+            <div>
+                <label class="block text-white text-lg" for="usename">username:</label>
+                <input placeholder="usuario" type="text" class="rounded-md text-[#111f42] font-bold h-10 pl-2" [(ngModel)]="usuario.username">
+            </div>
+            <div>
+                <label class="block text-white text-lg" for="usename">password:</label>
+                <input placeholder="********" type="password" class="rounded-md text-[#111f42] font-bold h-10 pl-2" [(ngModel)]="usuario.password" (keydown.enter)="login()">
+            </div>
+        </div>
+        <button (click)="login()" type="button" class="font-bold bg-[#111f42] hover:bg-[#162f6e] transition-colors text-white px-4 py-1 rounded-md text-lg">login</button>
+    </div>
+</article>

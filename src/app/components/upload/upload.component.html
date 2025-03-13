@@ -1,0 +1,89 @@
+<app-modal
+  [isOpen]="isOpenUpload"
+  (isOpenChange)="close($event)"
+  [title]="titulo"
+>
+  @if(newFolderFlag){
+    <div class="w-[600px] mt-2">
+      <input id="newfolder" name="newfolder" class="w-full rounded-xl h-10 border border-gray-200 pl-2" type="text" [(ngModel)]="newFolderPath" placeholder="Nombre del Folder Nuevo">
+    </div>
+  }
+  <div
+    class="flex flex-col items-center justify-center gap-2 h-56 border-2 border-dashed border-gray-300 rounded-2xl w-[600px] mt-4"
+    [class.border-blue-500]="isDragging"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    (click)="fileInput.click()"
+  >
+    <svg
+      class="w-10 h-10 text-gray-500 hover:scale-110 cursor-pointer"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" x2="12" y1="3" y2="15" />
+    </svg>
+    <span class="text-xl font-semibold">Drag and drop files here</span>
+    <span class="text-sm text-gray-400"
+      >or click to select files from your computer</span
+    >
+    <input #fileInput type="file" hidden multiple (change)="upload($event)" />
+  </div>
+  @if (files.length > 0) {
+  <div class="mt-4  w-[600px] p-2 border rounded-lg bg-gray-100">
+    <h3 class="text-lg font-semibold mb-2">Selected Files</h3>
+    <ul class="max-h-40 overflow-y-auto">
+      @for (file of files; track $index) {
+      <li
+        class="flex justify-between items-center bg-white p-2 mb-1 rounded shadow"
+      >
+        <span class="truncate w-4/5">{{ file.name }}</span>
+        <button
+          (click)="removeFile($index)"
+          class="text-red-500 font-semibold hover:text-red-700"
+        >
+          <svg
+            class="w-5 h-5"
+            aria-hidden="true"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+            />
+          </svg>
+        </button>
+      </li>
+      }
+    </ul>
+  </div>
+  <button class="mt-4 flex items-center justify-center gap-4 w-full px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md text-white font-semibold"
+  (click)="uploadFiles()"
+  >
+    <svg
+      class="w-5 h-5 text-white"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" x2="12" y1="3" y2="15" />
+    </svg>
+    Upload
+  </button>
+  }
+</app-modal>
