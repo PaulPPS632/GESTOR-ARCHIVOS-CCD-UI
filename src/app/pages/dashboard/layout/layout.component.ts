@@ -136,7 +136,9 @@ export class LayoutComponent implements OnInit{
   toggleIsOpenNewFolder(){
     this.isOpenNewFolder = !this.isOpenNewFolder;
   }
-  upload(event: Event){
-    
+  updatefoldersfiles(data: {files: FileModel[], folders: Folder}){
+    console.log('LLEGA A LAYOUT:',data)
+    this.files = [...this.files, ...data.files];
+    this.folders = [...this.folders, data.folders];
   }
 }

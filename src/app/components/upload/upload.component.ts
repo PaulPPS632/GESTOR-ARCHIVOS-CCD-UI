@@ -9,7 +9,7 @@ import {
 import { ModalComponent } from '../modal/modal.component';
 import { FilesService } from '../../services/files.service';
 import Swal from 'sweetalert2';
-import { FileModel } from '../../interfaces/types';
+import { FileModel, Folder } from '../../interfaces/types';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -22,7 +22,7 @@ export class UploadComponent {
   @Input() isOpenUpload: boolean = false;
   @Output() isOpenUploadChange = new EventEmitter<boolean>();
   @Output() uploadedFilesChange = new EventEmitter<FileModel[]>();
-  @Output() uploadedNewFolderChange = new EventEmitter<{folderPath: string, files: FileModel[]}>();
+  @Output() uploadedNewFolderFiles = new EventEmitter<{files: FileModel[], folders: Folder}>();
   @Input() path: string = '';
   @Input() token: string = '';
   @Input() newFolderFlag: boolean = false;
@@ -99,6 +99,7 @@ export class UploadComponent {
     this.filesService.upload(createpath, this.files, this.token).subscribe({
       next: (res) => {
         this.files = [];
+        this.uploadedNewFolderFiles.emit(res.data)
         this.Toast.fire({
           icon: 'success',
           title: 'Archivos subidos correctamente',

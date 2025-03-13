@@ -100,5 +100,5 @@
     </article>
 </div>
 
-<app-upload [(isOpenUpload)]="isOpenUpload" [path]="currentPath" [titulo]="'Upload Files'"/>
-<app-upload [(isOpenUpload)]="isOpenNewFolder" [newFolderFlag]="true" [path]="currentPath" [titulo]="'New Folder'"/>
+<app-upload (uploadedNewFolderFiles)="updatefoldersfiles($event)" [(isOpenUpload)]="isOpenUpload" [path]="currentPath" [titulo]="'Upload Files'"/>
+<app-upload (uploadedNewFolderFiles)="updatefoldersfiles($event)" [(isOpenUpload)]="isOpenNewFolder" [newFolderFlag]="true" [path]="currentPath" [titulo]="'New Folder'"/>
