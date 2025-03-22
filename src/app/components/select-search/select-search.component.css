@@ -1,0 +1,68 @@
+@keyframes expandHeight {
+    0% {
+      height: 0;
+      opacity: 0;
+      display: none;
+    }
+    100% {
+      height: 20rem;
+      opacity: 1;
+      display: block;
+    }
+  }
+  @keyframes supressHeight {
+    0% {
+      height: 20rem;
+      opacity: 1;
+      display: block;
+    }
+    100% {
+      height: 0;
+      opacity: 0;
+      display: none;
+    }
+  }
+  .expand-animation {
+    animation: expandHeight 0.3s ease-in-out forwards;
+  }
+  .supress{
+    animation: supressHeight 0.3s ease-in-out forwards;
+}
+  
+  
+  @keyframes expandHeightcontainer {
+    0% {
+      height: 0;
+      opacity: 0;
+      display: none;
+    }
+    100% {
+      height: 24rem;
+      opacity: 1;
+      display: block;
+    }
+  }
+  @keyframes supressHeightcontainer {
+    0% {
+      height: 24rem;
+      opacity: 1;
+      display: block;
+    }
+    100% {
+      height: 0;
+      opacity: 0;
+      display: none;
+    }
+  }
+  .inicial-style {
+    display: none;
+  }
+  
+  .expand-animation-container{
+    animation: expandHeightcontainer 0.3s ease-in-out forwards;
+  }
+  .supress-container{
+    animation: supressHeightcontainer 0.3s ease-in-out forwards;
+  
+}
+  

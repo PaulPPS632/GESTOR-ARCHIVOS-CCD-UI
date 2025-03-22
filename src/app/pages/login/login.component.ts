@@ -17,19 +17,19 @@ export class LoginComponent {
   router = inject(Router);
 
   usuario: Usuario ={
-    username: '',
+    email: '',
     password:''
   }
 
   login(){
-    this.router.navigate(['/files'])
-    /*
+    
+    
     this.authService.login(this.usuario).subscribe({
       next: (res) =>{
-        
-        if(res.rol == "admin" || res.rol == "usuario"){
-          console.log(res.rol);
-          this.router.navigate(['/dashboard'])
+        if(res.rol == "admin"){
+          this.router.navigate(['/Dashboard/Home'])
+        }else{
+          this.router.navigate(['/Dashboard/Shared'])
         }
       },
       error: (error) =>{
@@ -41,6 +41,6 @@ export class LoginComponent {
         })
       }
     });
-    */
+    
   }
 }

@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     tap((res) => {
       if (res.estado) {
         // Actualiza el estado del usuario en AuthService
-        authService.usuarioSubject.next(res.user);
+        authService.usuarioSubject.next(res.usuario);
       }
     }),
     map((res) => {

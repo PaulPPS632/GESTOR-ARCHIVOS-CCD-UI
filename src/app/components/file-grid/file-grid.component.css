@@ -7,9 +7,11 @@
     padding: 5px;
     width: 150px;
   }
-  .no-select {
-    user-select: none; /* Evita la selección de texto */
-    -webkit-user-select: none; /* Para navegadores basados en WebKit (Chrome, Safari) */
-    -moz-user-select: none; /* Para Firefox */
-    -ms-user-select: none; /* Para Edge y versiones antiguas de IE */
+
+
+  .selection-box {
+    @apply absolute border-2 border-blue-500 bg-blue-200 bg-opacity-30 pointer-events-none;
+  }
+  .altura{
+    height: calc(100vh - 10rem);
   }

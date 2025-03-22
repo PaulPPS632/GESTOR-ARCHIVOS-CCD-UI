@@ -1,0 +1,82 @@
+<article class="mx-4 w-full">
+    <h1 class="text-3xl text-blue-500 font-bold  pt-5">Detalle del Usuario</h1>
+    <div class="grid grid-cols-2 gap-4 w-1/2  my-4">
+        <div class="w-full">
+            <label class="block" for="nombre">Nombre:</label>
+            <input [(ngModel)]="usuario.name" class="text-lg h-10 rounded-md border border-gray-300 w-full pl-2" id="nombre" name="nombre" type="text" placeholder="Antony">
+        </div>
+        <div class="w-full">
+            <label class="block" for="email">Email:</label>
+            <input [(ngModel)]="usuario.email" class="text-lg h-10 rounded-md border border-gray-300 w-full pl-2" id="email" name="email" type="text" placeholder="paul@gmail.com">
+        </div>
+    </div>
+    <hr>
+    <div class="w-full flex items-center justify-start gap-5">
+        <h2 class="text-2xl text-blue-500 font-bold py-5 w-fit">Carpetas Compartidas</h2> 
+        <button class="block hover:-rotate-180 transition-all"
+        (click)="loadsharedfolders()"
+        >
+            <svg class="w-6 h-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+    </div>
+    <hr>
+    <div class="relative overflow-x-auto overflow-y-auto shadow-md sm:rounded-lg">
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-400"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-[#111f42]"
+          >
+            <tr>
+              <th scope="col" class="px-6 py-3 text-white">Nombre</th>
+              <th scope="col" class="px-6 py-3 text-white">Path</th>
+              <th scope="col" class="px-6 py-3 text-white">Acceso</th>
+              <th scope="col" class="px-6 py-3 text-white">Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (folder of folders; track $index) {
+            <tr
+              class="bg-white border-b hover:bg-gray-50 text-black"
+            >
+            <td class="px-6 py-4">
+              {{ folder.name }}
+            </td>
+            <td class="px-6 py-4">
+              {{ folder.path === '' ? 'root': folder.path  }}
+            </td>
+            <td class="px-6 py-4">
+                {{ folder.accessType }}
+              </td>
+            <td class="px-6 py-4 flex gap-2">
+                <button (click)="EliminarShared(folder.id)">
+                    <svg class="w-6 h-6 text-red-500 hover:text-red-400 hover:scale-110 hover:rotate-12 transition-all" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                </button>
+                <button (click)="toggleModalEditAccess(folder.id, folder.accessType)">
+                    <svg class="w-6 h-6 text-blue-500 hover:text-blue-400 hover:scale-110 hover:rotate-12 transition-all" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7 8.7 2.7a2.41 2.41 0 0 0-3.4 0L2.7 5.3a2.41 2.41 0 0 0 0 3.4L7 13"/><path d="m8 6 2-2"/><path d="m18 16 2-2"/><path d="m17 11 4.3 4.3c.94.94.94 2.46 0 3.4l-2.6 2.6c-.94.94-2.46.94-3.4 0L11 17"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                </button>
+                <svg [routerLink]="['/Dashboard/Home', folder.path]" class="w-6 h-6 cursor-pointer hover:scale-110 hover:rotate-12 transition-all" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+
+            </td>
+            </tr>
+            }@empty {
+            <tr
+              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <td class="px-6 py-4">No hay datos disponibles.</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+</article>
+<app-modal [(isOpen)]="isModalEditAccess" [title]="'Cambiar Tipo de Acceso'">
+    <div class="w-56">
+        <select [(ngModel)]="accessType" class="w-full h-10 rounded-md border border-gray-300 pl-2 mb-5">
+            <option value="editor">editor</option>
+            <option value="lector">lector</option>
+            <option value="contribuidor">contribuidor</option>
+        </select>
+        <button (click)="editaraccessModal()" class="h-14 bg-blue-500 font-semibold text-white px-4 w-full rounded-md">Editar Acceso</button>
+    </div>
+</app-modal>

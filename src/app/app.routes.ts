@@ -7,12 +7,13 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),
     },
     {
-        path:'files',
-        //canActivate:[authGuard],
+        path:'Dashboard',
+        canActivate:[authGuard],
         data:{
             title:'Dashboard',
             roles: ['admin', 'usuario']
         },
+        loadComponent: () => import('./pages/dashboard/layout/layout.component').then((m) => m.LayoutComponent),
         loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.DashboardRoutesModule)
     },
     {

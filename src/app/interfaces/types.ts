@@ -5,10 +5,13 @@ export interface Rol {
 export interface Usuario {
     id?: number;
     name?: string;
-    username: string;
+    email: string;
     password?: string;
     rolId?: number;
     rol?: Rol;
+    sharedFolders?: sharedFolders[];
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 export interface FileModel {
     id: number;
@@ -17,6 +20,7 @@ export interface FileModel {
     size: number;
     url: string;
     thumbnailUrl?: string;
+    path: string;
     owner?: Usuario;
     createdAt?: Date;
     updatedAt?: Date;
@@ -27,6 +31,7 @@ export interface Folder {
     id?: number;
     name: string;
     path: string;
+    accessType?: 'editor' | 'lector';
     owner?: Usuario;
     isStarred?: boolean;
     isShared?: boolean;
@@ -41,10 +46,10 @@ export interface LoginResponse {
     user: Usuario;
     token: string;
 }
-export interface ShareLinkData {
-    id: string;
-    accessType: 'public' | 'private' | 'readonly';
-    expiresAt?: Date;
-    linkCode: string;
-    url: string;
+export interface sharedFolders {
+    id?: number;
+    path: string;
+    accessType: 'public' | 'editor' | 'lector';
+    createdAt?: Date;
+    updatedAt?: Date;
 }
