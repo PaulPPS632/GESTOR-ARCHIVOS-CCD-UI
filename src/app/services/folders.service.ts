@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class FoldersService {
-  private apiUrl = environment.API_URL +'/api/gestor'; // Ajusta esta URL según tu API
+  private apiUrl = environment.API_URL +'/gestor'; // Ajusta esta URL según tu API
   http = inject(HttpClient);
 
   getFolderContents(path: string): Observable<ApiResponse<{ folders: Folder[], files: FileModel[], access: boolean }>> {

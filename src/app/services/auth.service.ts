@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   http = inject(HttpClient);
-  apiUrl: string = environment.API_URL + `/api/auth`;
+  apiUrl: string = environment.API_URL + `/auth`;
 
   public usuarioSubject = new BehaviorSubject<Usuario | null>(null);
   public usuario$ = this.usuarioSubject.asObservable();
