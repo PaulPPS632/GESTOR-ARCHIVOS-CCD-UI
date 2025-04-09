@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FileModel, Folder, Usuario } from '../../interfaces/types';
 import { FileiconComponent } from "../fileicon/fileicon.component";
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { ModalComponent } from "../modal/modal.component";
 import { SelectSearchComponent } from "../select-search/select-search.component";
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-file-grid',
@@ -18,7 +19,7 @@ export class FileGridComponent {
   @Input() Files: FileModel[] = [];
   @Input() Folders: Folder[]=[];
   @Input() accessTypeUser: string = 'lector';
-  @Output() navigateFolder = new EventEmitter<Folder>();
+  @Output() navigateFolder = new EventEmitter<string>();
   @Output() selectedFilesChange = new EventEmitter<FileModel[]>();
   @Output() sharedFolder = new EventEmitter<{folder: Folder, userId: number, accessType: string}>();
   @Output() renameFolder = new EventEmitter<{folder: Folder, newName: string}>();
@@ -42,7 +43,7 @@ export class FileGridComponent {
 
   isOpenRename: boolean = false;
   isOpenShare: boolean = false;
-
+  showFullName: boolean = false;
   Toast = Swal.mixin({
       toast: true,
       position: 'bottom-end',
@@ -94,6 +95,71 @@ export class FileGridComponent {
     this.deletefile.emit([this.selectedItem.path])
     this.closeContextMenu();
   }
+  info(){
+    this.closeContextMenu();
+    let html = '';
+    let width = null;
+    if(this.selectedItem.mimetype.includes('image')){
+      width = 700;
+      html = `
+      <ul class="flex flex-col items-start justify-start gap-2 py-2">
+        <li class="line-clamp-3 break-words"><strong>Nombre: </strong>${this.selectedItem.name}</li>
+        <li class="line-clamp-3 break-words">
+          <strong>Ubicacion: </strong>
+          <a href="#" id="navigateToFolder" class="text-blue-500 underline hover:opacity-80">${this.selectedItem.path}</a>
+        </li>
+        <li class="line-clamp-3 break-words"><strong>Tamaño: </strong>${this.selectedItem.size}</li>
+        <li class="line-clamp-3 break-words"><strong>Tipo: </strong>${this.selectedItem.mimetype}</li>
+      </ul>
+      <img src="${this.selectedItem.url}" alt="${this.selectedItem.name}">
+      `
+    }else if(this.selectedItem.mimetype.includes('video')){
+      width = 1000;
+      html = `
+      <ul class="flex flex-col items-start justify-start">
+        <li><strong>Nombre: </strong>${this.selectedItem.name}</li>
+        <li><strong>Ubicacion: </strong>${this.selectedItem.path}</li>
+        <li><strong>Tamaño: </strong>${this.selectedItem.size}</li>
+        <li><strong>Tipo: </strong>${this.selectedItem.mimetype}</li>
+      </ul>
+      <video src="${this.selectedItem.url}" controls autoplay>
+
+      </video>
+      `
+    }else{
+      width = 700;
+      html = `
+      <ul class="flex flex-col items-start justify-start">
+        <li class="line-clamp-3 break-words"><strong>Nombre: </strong>${this.selectedItem.name}</li>
+        <li><strong>Ubicacion: </strong>${this.selectedItem.path}</li>
+        <li><strong>Tamaño: </strong>${this.selectedItem.size}</li>
+        <li><strong>Tipo: </strong>${this.selectedItem.mimetype}</li>
+      </ul>
+      `
+    }
+    Swal.fire(
+      {
+        html,
+        width,
+        heightAuto: true, 
+        showCloseButton: true,
+        showConfirmButton: false,
+        showCancelButton: false,
+        focusConfirm: false,
+        didOpen: () => {
+          const link = document.getElementById('navigateToFolder');
+          if (link) {
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+              const folderPath = this.selectedItem.path;
+              this.navigateFolder.emit(folderPath); // Emitimos al padre
+              Swal.close(); // Cerramos el SweetAlert
+            });
+          }
+        }
+      }
+    )
+  }
   shareFolder(){
     this.isOpenShare = true;
     this.authService.listar().subscribe((response) => {
@@ -101,8 +167,27 @@ export class FileGridComponent {
     });
     this.closeContextMenu();
   }
+  tooltipTimers: { [key: number]: any } = {};
+  tooltipsVisible: { [key: number]: boolean } = {};
+  tooltipPosition = { x: 0, y: 0 };
+
+  showTooltipDelayed(file: FileModel, event: MouseEvent) {
+    this.selectedItem = file;
+    this.tooltipTimers[file.id] = setTimeout(() => {
+    this.tooltipPosition = {
+      x: event.offsetX,
+      y: event.offsetY
+    };
+    this.tooltipsVisible[file.id] = true;
+    }, 500);
+  }
+  hideTooltip(id: number) {
+    clearTimeout(this.tooltipTimers[id]);
+    this.tooltipsVisible[id] = false;
+  }
+
   TriggerNavigatefolder(folder: Folder){
-    this.navigateFolder.emit(folder);
+    this.navigateFolder.emit(folder.path);
   }
   UsuarioSearch(searchFlow: string){
     this.authService.search(searchFlow).subscribe((res) => {

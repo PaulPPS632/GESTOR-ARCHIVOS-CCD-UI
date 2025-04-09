@@ -56,6 +56,14 @@ export class UsuariosComponent implements OnInit {
     this.modalusuarios = !this.modalusuarios;
   }
   crear() {
+    if(this.newUsusario.name == '' || this.newUsusario.email == '' || this.newUsusario.password == '' || this.newUsusario.rolId == 0){
+      this.modalusuarios = false;
+      this.Toast.fire({
+        icon: 'error',
+        title: 'Todos los campos son obligatorios',
+      });
+      return;
+    }
     if (this.usuario?.rol?.name === 'admin') {
       this.isLoader = true;
       this.authservice.crear(this.newUsusario).subscribe({
@@ -72,7 +80,7 @@ export class UsuariosComponent implements OnInit {
           };
           this.Toast.fire({
             icon: 'success',
-            title: 'Se creao el usuario correctamente correctamente',
+            title: 'Se creo el usuario correctamente correctamente',
           });
         },
         error: (error) => {

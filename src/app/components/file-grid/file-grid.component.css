@@ -15,3 +15,26 @@
   .altura{
     height: calc(100vh - 10rem);
   }
+
+  .ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 150px;
+  }
+  
+  .tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    z-index: 5000 ;
+    top: 100%; /* puede ajustar según tu diseño */
+    left: 0;
+    transform: translateY(5px);
+  }
+  

@@ -34,9 +34,9 @@
             </div>
         </div>
         <hr>
-        <div class="flex flex-col md:flex-row flex-wrap items-start md:items-center justify-start md:justify-between gap-4 py-4 px-2 h-20">
+        <div class="flex flex-col md:flex-row flex-wrap items-center md:items-center justify-center md:justify-between gap-4 py-4 px-2 h-fit">
             <!--Breadcrums-->
-            <div class="flex flex-wrap gap-0 items-start md:items-center justify-start md:justify-center text-gray-500 no-select">
+            <div class="flex flex-wrap gap-0 items-center md:items-start justify-center md:justify-start text-gray-500 no-select w-[450px]">
                 @for (crumb of breadcrumbs; track $index) {
                     <a class="px-2 hover:bg-gray-100 rounded-lg" [class.text-black]="$index === breadcrumbs.length - 1"
                     [routerLink]="getCrumbPath(crumb)"
@@ -50,7 +50,7 @@
                 }
             </div>
             <!--Actions-->
-            <div class="flex gap-2 font-medium items-center justify-center no-select">
+            <div class="flex gap-2 font-medium items-end justify-end no-select">
                 @if (accessType == 'contribuidor' || accessType == 'editor') {
                     <button class="flex gap-1 items-center justify-center rounded-xl border border-gray-200 p-2 hover:bg-gray-100 transition-all h-fit"
                     (click)="historial()"

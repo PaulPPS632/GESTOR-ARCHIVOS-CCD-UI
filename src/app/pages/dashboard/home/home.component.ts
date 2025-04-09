@@ -134,14 +134,10 @@ export class HomeComponent {
     this.breadcrumbs = breadcrumbs;
   }
 
-  navigateFolder(folder: Folder): void {
+  navigateFolder(path: string): void {
     // Generar el nuevo path. Si el currentPath es 'root' o vacío, se usa directamente el folder.name;
     // de lo contrario, se concatena al path actual.
-    const newPath =
-      this.currentPath === 'root' || this.currentPath === ''
-        ? folder.name
-        : `${this.currentPath}/${folder.name.replace(/^\/+|\/+$/g, "")}`;
-    this.router.navigate(['/Dashboard/Home', newPath], {
+    this.router.navigate(['/Dashboard/Home', path], {
       queryParams: { token: this.token },
     });
   }

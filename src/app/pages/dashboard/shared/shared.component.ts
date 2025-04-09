@@ -226,12 +226,12 @@ export class SharedComponent implements OnInit {
       },
     });
   }
-  navigateFolder(folder: Folder): void {
+  navigateFolder(path: string): void {
     // Generar el nuevo path. Si el currentPath es 'root' o vacío, se usa directamente el folder.name;
     // de lo contrario, se concatena al path actual.
     //const newPath = this.currentPath === 'root' || this.currentPath === '' ? folder.name : `${this.currentPath}/${folder.name}`;
-    console.log('navega a: ', folder);
-    this.router.navigate(['/Dashboard/Shared', folder.path]);
+    console.log('navega a: ', path);
+    this.router.navigate(['/Dashboard/Shared', path]);
   }
   selectPaths(files: FileModel[]) {
     this.selectedFiles = files;

@@ -1,10 +1,10 @@
 
 <nav class="fixed bg-gray-100 w-64 border border-r-gray-200 min-h-screen flex-col gap-3 hidden md:block">
-    <div class="w-10 md:w-20 rounded-md bg-blue-100 p-2">
+    <div class="w-10 md:w-20 rounded-md bg-blue-100 p-2 mb-2 mx-auto">
         <img src="LogoCCD.png" alt="logo de la empresa ccd" class="w-full object-contain">
     </div>
     <hr>
-    <ul class=" flex flex-col gap-2 px-4">
+    <ul class=" flex flex-col gap-2 px-4 mt-10">
         @if (usuario?.rol?.name === 'admin') {
             <li>
                 <a 
