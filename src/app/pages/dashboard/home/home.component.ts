@@ -220,10 +220,10 @@ export class HomeComponent {
     const paths = this.selectedFiles.map((file) => file.path);
     this.delete(paths);
   }
-  compartir(data: { folder: Folder; userId: number }) {
+  compartir(data: { folder: Folder; userId: number, accessType: string }) {
     this.isLoader = true;
     this.foldersService
-      .shared(data.folder.name,data.folder.path, data.userId, 'Editor')
+      .shared(data.folder.name,data.folder.path, data.userId, data.accessType)
       .subscribe({
         next: (response) => {
           this.isLoader = false;
