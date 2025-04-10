@@ -189,6 +189,7 @@ export class UploadComponent implements OnInit{
                 }
               },
               error: (err) => {
+                console.error(err);
                 this.isOpenLoaderChange.emit(false);
                 Swal.close();
                 this.Toast.fire({

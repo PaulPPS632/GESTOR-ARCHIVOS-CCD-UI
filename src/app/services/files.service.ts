@@ -95,7 +95,7 @@ export class FilesService {
         formData,
         {
           reportProgress: true,
-          observe: 'events', // 👈 clave para ver progreso
+          observe: 'events', 
         }
       );
     }
