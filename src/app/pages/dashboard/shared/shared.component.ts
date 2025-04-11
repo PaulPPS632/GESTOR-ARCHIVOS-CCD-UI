@@ -48,6 +48,7 @@ export class SharedComponent implements OnInit {
   historialdata: any[] = [];
   isLoader: boolean = false;
   isOpenHistorial: boolean = false;
+  progress = 100;
   Toast = Swal.mixin({
     toast: true,
     position: 'bottom-end',
@@ -76,6 +77,7 @@ export class SharedComponent implements OnInit {
         }
       }
     });
+    this.filesService.progress$.subscribe(p => this.progress = p);
   }
   reloadcontent(){
     if(this.currentPath !== '' && this.currentPath !== null){
@@ -239,7 +241,7 @@ export class SharedComponent implements OnInit {
   redirectShared() {
     this.router.navigate(['/Dashboard/Shared']);
   }
-  updatefoldersfiles(data: { files: FileModel[]; folder: Folder }) {
+  updatefoldersfiles(data: { files: FileModel[]; folder: Folder | undefined  }) {
     console.log('LLEGA A LAYOUT:', data);
     if (data.files) {
       this.files = [...this.files, ...data.files];
@@ -288,4 +290,48 @@ export class SharedComponent implements OnInit {
       }
     })
   }
+  DownloadFolder(){
+      this.progress = 0;
+      const MAX_SIZE_BYTES = 2 * 1024 * 1024 * 1024; // 2GB
+      const filesdownload = this.files
+      .filter(file => file.size <= MAX_SIZE_BYTES).map((file) => {
+        return { name: file.name, url: file.url };
+      });
+      //this.filesService.downloadFolderAsZipWithProgress(filesdownload, this.currentPath);
+      Swal.fire({
+        title: 'Descargando archivos...',
+        html: `
+          <div style="margin-top: 10px;">
+            <progress id="zipProgress" value="0" max="100" style="width: 100%;"></progress>
+            <div id="zipPercentText" style="margin-top: 5px; font-weight: bold;">0%</div>
+          </div>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          // Empieza la descarga cuando se abre el SweetAlert
+          this.filesService.downloadFolderAsZipWithProgress(filesdownload, this.currentPath, (progress: number) => {
+            const progressBar = document.getElementById('zipProgress') as HTMLProgressElement;
+            const percentText = document.getElementById('zipPercentText');
+            if (progressBar && percentText) {
+              progressBar.value = progress;
+              percentText.textContent = `${progress}%`;
+            }
+          }).then(() => {
+            Swal.fire({
+              icon: 'success',
+              title: '¡Descarga completada!',
+              timer: 2000,
+              showConfirmButton: false,
+            });
+          }).catch(() => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al descargar archivos',
+              text: 'Verifica tu conexión o intenta más tarde.',
+            });
+          });
+        }
+      });
+    }
 }

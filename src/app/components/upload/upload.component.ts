@@ -26,7 +26,7 @@ export class UploadComponent implements OnInit{
   @Output() isOpenUploadChange = new EventEmitter<boolean>();
   @Output() isOpenLoaderChange = new EventEmitter<boolean>();
   @Output() uploadedFilesChange = new EventEmitter<FileModel[]>();
-  @Output() uploadedNewFolderFiles = new EventEmitter<{files: FileModel[], folder: Folder}>();
+  @Output() uploadedNewFolderFiles = new EventEmitter<{files: FileModel[], folder: Folder| undefined}>();
   @Input() path: string = '';
   @Input() token: string = '';
   @Input() newFolderFlag: boolean = false;
@@ -96,35 +96,6 @@ export class UploadComponent implements OnInit{
     this.isOpenUploadChange.emit(flag);
   }
   /*
-  uploadFiles() {
-    console.log(this.path, this.files, this.token);
-    this.Toast.fire({
-      icon: 'success',
-      title: 'Subiendo archivos',
-    });
-    const createpath = this.newFolderFlag ? `${this.path}/${this.newFolderPath}/` : this.path;
-    this.isOpenUploadChange.emit(false);
-    this.isOpenLoaderChange.emit(true);
-    console.log("el usuario id es: ",this.usuario?.id);
-    this.filesService.upload(createpath, this.files, this.newFolderFlag , this.usuario?.id, this.token).subscribe({
-      next: (res) => {
-        this.files = [];
-        this.isOpenLoaderChange.emit(false);
-        this.uploadedNewFolderFiles.emit(res.data)
-        this.Toast.fire({
-          icon: 'success',
-          title: 'Archivos subidos correctamente',
-        });
-      },
-      error: (err) => {
-        this.isOpenLoaderChange.emit(false);
-        this.Toast.fire({
-          icon: 'error',
-          title: 'Error al subir archivos',
-        });
-      },
-    });
-  }*/
     uploadFiles() {
       const createpath = this.newFolderFlag ? `${this.path}/${this.newFolderPath}/` : this.path;
       this.isOpenUploadChange.emit(false);
@@ -141,7 +112,7 @@ export class UploadComponent implements OnInit{
         allowOutsideClick: false,
         showConfirmButton: false,
         didOpen: () => {
-          this.filesService.upload(createpath, this.files, this.newFolderFlag, this.usuario?.id, this.token)
+          this.filesService.uploadPresigned(createpath, this.files, this.newFolderFlag, this.usuario?.id, this.token)
             .subscribe({
               next: (event: HttpEvent<any>) => {
                 if (event.type === HttpEventType.UploadProgress && event.total) {
@@ -200,39 +171,174 @@ export class UploadComponent implements OnInit{
             });
         }
       });
-    /*
-      this.filesService.upload(createpath, this.files, this.newFolderFlag, this.usuario?.id, this.token)
-        .subscribe({
-          next: (event) => {
-            if (event.type === HttpEventType.UploadProgress) {
-              const percent = Math.round(100 * (event.loaded / (event.total || 1)));
     
-              // Actualiza barra de progreso manualmente
-              const progressBar = document.getElementById('progress-bar');
-              const progressText = document.getElementById('progress-text');
-    
-              if (progressBar) progressBar.style.width = `${percent}%`;
-              if (progressText) progressText.innerText = `${percent}%`;
-            } else if (event.type === HttpEventType.Response) {
-              this.files = [];
-              this.uploadedNewFolderFiles.emit(event.body!.data);
-    
-              Swal.fire({
-                icon: 'success',
-                title: '¡Archivos subidos!',
-                text: 'Los archivos se subieron correctamente.',
-                timer: 2000,
-                showConfirmButton: false,
-              });
-            }
-          },
-          error: (err) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error al subir archivos',
-              text: 'Ocurrió un problema durante la subida.',
+    }
+      */
+  /*uploadFiles() {
+    const createpath = this.newFolderFlag ? `${this.path}/${this.newFolderPath}/` : this.path;
+    this.isOpenUploadChange.emit(false);
+    this.isUploading = true;
+    this.filesService.upload(createpath, this.files, this.newFolderFlag, this.usuario?.id, this.token)
+      .subscribe({
+        next: (event: HttpEvent<any>) => {
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            const progressValue = Math.round((event.loaded / event.total) * 100);
+            console.log(`Progreso: ${progressValue}%`);
+          } else if (event.type === HttpEventType.Response) {
+            this.files = [];
+            this.uploadedNewFolderFiles.emit(event.body.data);
+            this.isUploading = false;
+            this.Toast.fire({
+              icon: 'success',
+              title: 'Archivos subidos correctamente',
             });
           }
-        });*/
+        },
+        error: (err) => {
+          console.error(err);
+          this.isUploading = false;
+          this.Toast.fire({
+            icon: 'error',
+            title: 'Error al subir archivos',
+          });
+        }
+      });
+  }*/
+ uploadFiles(){
+  const createpath = this.newFolderFlag ? `${this.path}/${this.newFolderPath}/` : this.path;
+    this.isOpenUploadChange.emit(false);
+    this.isOpenLoaderChange.emit(true);
+  this.Toast.fire({
+    icon: 'success',
+    title: 'Subiendo archivos, esto puede tardar varios minutos ...',
+  });
+  this.filesService.uploadMultipartFiles(createpath, this.files, this.newFolderFlag, this.usuario?.id).subscribe({
+    next: (responses: void[]) => {
+      if (responses.length === this.files.length) {
+        this.isOpenLoaderChange.emit(false);
+        this.Toast.fire({
+          icon: 'success',
+          title: 'Archivos subidos correctamente',
+        });
+        console.log(this.files);
+        const uploaded = {
+          files: !this.newFolderFlag ? this.files.map((res)=> ({
+            id: Math.floor(Math.random() * 1000000),
+            name: res.name,
+            mimetype: res.type,
+            size: res.size,
+            url: `https://pub-9d2abfa175714e64aed33b90722a9fd5.r2.dev/${createpath}/${res.name}`,
+            thumbnailUrl : `https://pub-9d2abfa175714e64aed33b90722a9fd5.r2.dev/${createpath}/${res.name}`,
+            path: createpath,
+          }) as FileModel) : [] ,
+          folder: this.newFolderFlag ? {
+            name: this.newFolderPath,
+            path: `${this.path}/${this.newFolderPath}`,
+            accessType: 'editor' as 'editor',
+          }: undefined
+          }
+          console.log(uploaded)
+        this.uploadedNewFolderFiles.emit(uploaded)
+        this.files = [];
+      }
+    },
+    error: (err) => {
+      console.error(err);
+      this.isOpenLoaderChange.emit(false);
+      this.Toast.fire({
+        icon: 'error',
+        title: 'Error al subir archivos',
+      });
     }
+  });
+  
+ }
+ /**
+  * this.filesService.uploadLargeFiles(createpath, this.files, this.newFolderFlag)
+    .subscribe({
+      next: (responses: any[]) => {
+        if (responses.length === this.files.length) {
+          this.files = [];
+          this.isUploading = false;
+          this.Toast.fire({
+            icon: 'success',
+            title: 'Archivos subidos correctamente',
+          });
+          this.uploadedFilesChange.emit(responses);
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.isUploading = false;
+        this.Toast.fire({
+          icon: 'error',
+          title: 'Error al subir archivos',
+        });
+      }
+    });
+  * 
+  * 
+  * 
+  * 
+  * 
+  Swal.fire({
+    title: 'Subiendo archivos...',
+    html: `
+      <div id="swal-progress-wrapper">
+        <progress id="uploadProgress" value="0" max="100" style="width: 100%;" class="rounded-lg"></progress>
+        <span id="progressText">0%</span>
+      </div>`,
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      this.filesService.uploadPresigned(createpath, this.files, this.newFolderFlag, this.usuario?.id, this.token)
+      .subscribe({
+        next: (events: HttpEvent<any>[]) => {
+          // Manejar el progreso de cada archivo
+          events.forEach((event) => {
+            if (event.type === HttpEventType.UploadProgress && event.total) {
+              const progressValue = Math.round((event.loaded / event.total) * 100);
+              const progressEl = document.getElementById('uploadProgress') as HTMLProgressElement;
+              const textEl = document.getElementById('progressText')!;
+              progressEl.value = progressValue;
+              textEl.innerText = `${progressValue}%`;
+
+              if (progressValue === 100 && !alreadySwitchedToProcessing) {
+                alreadySwitchedToProcessing = true;
+                const wrapper = document.getElementById('swal-progress-wrapper');
+                if (wrapper) {
+                  wrapper.innerHTML = `
+                    <div style="text-align: center; padding-top: 10px;">
+                      <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                      <p style="margin-top: 10px;">Finalizando subida...</p>
+                    </div>
+                    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }}</style>`;
+                }
+              }
+            } else if (event.type === HttpEventType.Response) {
+              // Cuando todas las subidas terminan
+              this.files = [];
+              this.uploadedNewFolderFiles.emit(event.body.data);
+              this.isOpenLoaderChange.emit(false);
+              Swal.close(); // Cierra el loader
+              this.Toast.fire({
+                icon: 'success',
+                title: 'Archivos subidos correctamente',
+              });
+            }
+          });
+        },
+        error: (err) => {
+          console.error(err);
+          this.isOpenLoaderChange.emit(false);
+          Swal.close();
+          this.Toast.fire({
+            icon: 'error',
+            title: 'Error al subir archivos',
+          });
+        }
+      });
+    }
+  });
+  */
 }

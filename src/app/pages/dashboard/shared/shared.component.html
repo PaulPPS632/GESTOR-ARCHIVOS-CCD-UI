@@ -91,11 +91,31 @@
                         <span class="hidden md:block">Delete</span>
                     </button>
                 }
-                <button class="rounded-xl border border-gray-200 p-2 hover:bg-gray-100 transition-all">
-                    <svg class="w-6 h-6 text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <div class="relative group inline-block">
+                    <button class="rounded-xl border border-gray-200 p-2 hover:bg-gray-100 transition-all">
+                      <svg class="w-6 h-6 text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                           width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M6 12h.01m6 0h.01m5.99 0h.01"/>
-                      </svg>                      
-                </button>
+                      </svg>
+                    </button>
+                  
+                    <!-- Dropdown menu -->
+                    <div class="absolute z-50 -left-10 -translate-x-1/2 mt-[2px] w-40 bg-white border rounded-lg border-gray-200 shadow-lg
+                                opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transform transition-all duration-200 origin-top pointer-events-none group-hover:pointer-events-auto">
+                      
+                        <button class="flex gap-2 w-full items-center justify-center border border-gray-200 p-2 hover:bg-gray-100 transition-all h-fit"
+                            (click)="historial()">
+                            <svg  class="w-5 h-5 text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+                            <span class="hidden md:block">Historial</span>
+                        </button>  
+                        <button class="flex gap-1 w-full items-center justify-center border border-gray-200 p-2 hover:bg-gray-100 transition-all h-fit"
+                            (click)="DownloadFolder()"
+                        >
+                            <svg class="w-5 h-5 text-black" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13v8l-4-4"/><path d="m12 21 4-4"/><path d="M4.393 15.269A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.436 8.284"/></svg>
+                            <span class="hidden md:block">Download</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <hr>
