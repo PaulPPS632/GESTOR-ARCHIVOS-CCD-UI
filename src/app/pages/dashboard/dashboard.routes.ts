@@ -10,7 +10,6 @@ const routes: Routes = [
       title: 'Usuarios',
       roles: ['admin']
     },
-    canActivate: [authGuard],
     loadComponent: () => import('./home/home.component').then((m) => m.HomeComponent),
   },
   {

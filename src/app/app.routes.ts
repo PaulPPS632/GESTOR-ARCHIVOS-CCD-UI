@@ -8,7 +8,7 @@ export const routes: Routes = [
     },
     {
         path:'Dashboard',
-        canActivate:[authGuard],
+        //canActivate:[authGuard],
         data:{
             title:'Dashboard',
             roles: ['admin', 'usuario']
